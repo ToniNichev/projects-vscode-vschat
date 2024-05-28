@@ -15759,7 +15759,11 @@ function activate(context) {
           switch (message.command) {
             case "sendMessage":
               const rawResponse = await queryChatGPT(message.text, apiKey);
-              let response = rawResponse.replace(/```(.*?)\s(.*?)```/gs, `
+              if (rawResponse === null) {
+                return;
+              }
+              let response = rawResponse.replace(/\n/g, "<br>");
+              response = response.replace(/```(.*?)<br>(.*?)```/gs, `
                             <div class="mx-auto">
                             <div class="bg-gray-800 rounded-lg shadow-lg">
                                 <div class="flex items-center justify-between px-4 py-2 bg-gray-900 rounded-t-lg">
