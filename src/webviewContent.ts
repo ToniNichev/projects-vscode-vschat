@@ -8,6 +8,7 @@ export function getWebviewContent() {
             <title>Chat</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <style>
+
             .message {
                 padding: 10px;
                 border-radius: 10px;
@@ -15,6 +16,7 @@ export function getWebviewContent() {
                 position: relative;
                 font-size: 14px;
                 color: #333;
+                overflow-x: hidden;
             }
             .user-message::before {
                 content: '';
@@ -75,19 +77,22 @@ export function getWebviewContent() {
             .code-content {
                 font-size: 0.875rem; /* text-sm */
                 font-family: monospace; /* font-mono */
-            }            
+            }     
+            
+            .language-javascript {
+                background: none;
+            }
 
             #messages {
                 height: calc(100vh - 150px); /* Adjust based on header, footer, and padding */
-            }   
-
+            }             
             </style>
         </head>
         <body class="flex flex-col h-screen">
             <div id="chat-container" class="flex flex-col flex-grow p-4">
                 <div id="messages" class="flex-grow overflow-y-auto p-2 rounded mb-4"></div>
                     <div class="flex">
-                    <textarea id="message-input" rows="2" placeholder="Type a message" class="flex-grow p-2 border border-gray-300 rounded mr-2"></textarea>
+                    <textarea id="message-input" rows="2" placeholder="Ask openAI" class="text-black flex-grow p-2 border border-gray-300 rounded mr-2"></textarea>
                     <button id="send-button" class="p-2 bg-blue-500 text-white rounded">Send</button>
                 </div>
             </div>
