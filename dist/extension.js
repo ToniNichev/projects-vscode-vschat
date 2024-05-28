@@ -15676,7 +15676,9 @@ function getWebviewContent() {
                         case 'receiveMessage':
                             const messagesDiv = document.getElementById('messages');
                             messagesDiv.innerHTML += '<div class="code-content message bot-response bg-gray-200 self-start">' + message.text + '</div>';
-                            updateState();
+                            
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                            updateState();                            
                             break;
                         case 'restoreState':
                             const state = message.state;
