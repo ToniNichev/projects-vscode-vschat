@@ -1,0 +1,19 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore the compiled out directory
+out/
+
+# Ignore any build directories
+/.vscode/
+.vscode-test/
+launch.json
+*.code-workspace
+.history
+.vscode-ignore
+
+# Ignore any local settings file
+/settings.json
+
+# Ignore any logs
+*.log
