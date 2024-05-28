@@ -7,8 +7,6 @@ async function queryChatGPT(prompt: string, apiKey: string) {
         apiKey: apiKey
     });
 
-
-    
     try {
         const completion = await openai.chat.completions.create({
             messages: [{ role: "system", content: prompt }],
@@ -28,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
     let disposable = vscode.commands.registerCommand('vschat.chat', async () => {
 
 
-
+        
         const secretStorage = context.secrets;
         let apiKey = await secretStorage.get('openai.apiKey');
         
