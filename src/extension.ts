@@ -90,7 +90,7 @@ export function activate(context: vscode.ExtensionContext) {
                             `);
                             // Send response back to the webview
                             panel.webview.postMessage({ command: 'receiveMessage', text: response });
-                            vscode.window.showInformationMessage('Received message: ' + response);
+                            // vscode.window.showInformationMessage('Received message: ' + response);
                             // Update state
                             panel.webview.postMessage({ command: 'updateState' });
                             return;
