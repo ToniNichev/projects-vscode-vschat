@@ -1,19 +1,69 @@
-# Ignore node_modules directory
+# Node.js
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Ignore the compiled out directory
-out/
-
-# Ignore any build directories
-/.vscode/
-.vscode-test/
-launch.json
-*.code-workspace
-.history
-.vscode-ignore
-
-# Ignore any local settings file
-/settings.json
-
-# Ignore any logs
+# Logs
+logs
 *.log
+logs/*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+
+# VS Code files
+.vscode/
+.history/
+
+# Build directories
+dist/
+out/
+coverage/
+temp/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# VS Code extension packaging output
+.vscode-test/
+
+# Miscellaneous
+*.sublime-project
+*.sublime-workspace
+*.tmproj
+*.log
+*.tmp
+*.swp
+
+# IntelliJ
+.idea/
+
+# GitHub Actions
+.github/

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { OpenAI } from 'openai';
 import { getWebviewContent } from './webviewContent';
 
-async function queryChatGPT(prompt: string, apiKey: string) {
+async function queryChatGPT(prompt: string, apiKey: string, model: string) {
     const openai = new OpenAI({
         apiKey: apiKey
     });
@@ -10,7 +10,7 @@ async function queryChatGPT(prompt: string, apiKey: string) {
     try {
         const completion = await openai.chat.completions.create({
             messages: [{ role: "system", content: prompt }],
-            model: "gpt-3.5-turbo",
+            model: model,
         });
         return completion.choices[0].message.content;
     } catch (error) {
@@ -67,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
                 async message => {
                     switch (message.command) {
                         case 'sendMessage':
-                            const rawResponse = await queryChatGPT(message.text, apiKey);
+                            const rawResponse = await queryChatGPT(message.text, apiKey, message.model);
                             if(rawResponse === null) {
                                 return;
                             }
