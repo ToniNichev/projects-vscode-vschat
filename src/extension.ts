@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { OpenAI } from 'openai';
 import { getWebviewContent } from './webviewContent';
 import { QuickFixProvider } from './quickFixProvider';
+import marked from "marked";
 
 async function queryChatGPT(prompt: string, apiKey: string, model: string) {
     const openai = new OpenAI({
@@ -83,6 +84,9 @@ export function activate(context: vscode.ExtensionContext) {
                             if (rawResponse === null) {
                                 return;
                             }
+
+                            let response = marked(rawResponse);
+                            /*
                             let response = rawResponse.replace(/\n/g, '<br>');
                             response = response.replace(/```(.*?)<br>(.*?)```/gs, `
                             <div class="mx-auto">
@@ -100,6 +104,7 @@ export function activate(context: vscode.ExtensionContext) {
                             </div>
                         </div>                            
                             `);
+                            */
                             if (panel) {
                                 // Send response back to the webview
                                 panel.webview.postMessage({ command: 'receiveMessage', text: response });
