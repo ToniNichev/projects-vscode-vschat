@@ -16,12 +16,16 @@ async function queryChatGPT(prompt: string, apiKey: string, model: string) {
         return completion.choices[0].message.content;
     } catch (error) {
         console.error('Error fetching completion:', error);
-        return `Error: ${error.message}`;
+        if (error instanceof Error) {
+            return `Error: ${error.message}`;
+        } else {
+            return 'An unknown error occurred.';
+        }
     }
 }
 
 export function activate(context: vscode.ExtensionContext) {
-    
+
 
     const quickFixProvider = new QuickFixProvider();
     context.subscriptions.push(vscode.languages.registerCodeActionsProvider('javascript', quickFixProvider, {
@@ -34,10 +38,10 @@ export function activate(context: vscode.ExtensionContext) {
     let disposable = vscode.commands.registerCommand('vschat.chat', async () => {
 
 
-        
+
         const secretStorage = context.secrets;
         let apiKey = await secretStorage.get('openai.apiKey');
-        
+
         if (!apiKey) {
             apiKey = await vscode.window.showInputBox({ prompt: 'Enter your OpenAI API key', ignoreFocusOut: true, password: true });
             if (apiKey) {
@@ -46,7 +50,7 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showErrorMessage('API key is required to use this extension.');
                 return;
             }
-        }        
+        }
 
 
 
@@ -76,11 +80,11 @@ export function activate(context: vscode.ExtensionContext) {
                     switch (message.command) {
                         case 'sendMessage':
                             const rawResponse = await queryChatGPT(message.text, apiKey, message.model);
-                            if(rawResponse === null) {
+                            if (rawResponse === null) {
                                 return;
                             }
                             let response = rawResponse.replace(/\n/g, '<br>');
-                            response =  response.replace(/```(.*?)<br>(.*?)```/gs, `
+                            response = response.replace(/```(.*?)<br>(.*?)```/gs, `
                             <div class="mx-auto">
                             <div class="bg-gray-800 rounded-lg shadow-lg">
                                 <div class="flex items-center justify-between px-4 py-2 bg-gray-900 rounded-t-lg">
@@ -96,11 +100,13 @@ export function activate(context: vscode.ExtensionContext) {
                             </div>
                         </div>                            
                             `);
-                            // Send response back to the webview
-                            panel.webview.postMessage({ command: 'receiveMessage', text: response });
-                            // vscode.window.showInformationMessage('Received message: ' + response);
-                            // Update state
-                            panel.webview.postMessage({ command: 'updateState' });
+                            if (panel) {
+                                // Send response back to the webview
+                                panel.webview.postMessage({ command: 'receiveMessage', text: response });
+                                // vscode.window.showInformationMessage('Received message: ' + response);
+                                // Update state
+                                panel.webview.postMessage({ command: 'updateState' });
+                            }
                             return;
                     }
                 },
