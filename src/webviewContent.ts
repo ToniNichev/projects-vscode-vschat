@@ -2,19 +2,16 @@ export function getWebviewContent() {
     return `
     <!DOCTYPE html>
     <html lang="en">
-    
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Chat</title>
-        <script src="./vscode-api.js"></script>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <style>
-    
             body {
                 overflow: hidden;
-            }
-    
+            }        
             .message {
                 padding: 10px;
                 border-radius: 10px;
@@ -79,116 +76,134 @@ export function getWebviewContent() {
     
             .script-snippet {
                 background-color: #f7fafc;
-                /* bg-gray-100 */
                 border: 1px solid #e2e8f0;
-                /* border-gray-300 */
                 border-radius: 0.375rem;
-                /* rounded-md */
                 padding: 1rem;
-                /* p-4 */
                 margin-top: 1rem;
-                /* my-4 */
                 margin-bottom: 1rem;
-                /* my-4 */
                 overflow-x: auto;
-                /* overflow-x-auto */
             }
     
             .code-content {
                 font-size: 0.875rem;
-                /* text-sm */
                 font-family: monospace;
-                /* font-mono */
-            }
-    
-            .language-javascript {
-                background: none;
             }
     
             #messages {
                 overflow-x: hidden;
                 height: calc(100vh - 160px);
-                /* Adjust based on header, footer, and padding */
             }
+    
+            .flex-container {
+                display: flex;
+                align-items: flex-start;
+            }
+    
+            .user-icon,
+            .bot-icon {
+                font-size: 40px;
+                margin-right: 10px;
+                color: white; 
+            }
+    
+            .user-message-container {
+                justify-content: flex-end;
+            }
+    
+            .bot-message-container {
+                justify-content: flex-start;
+            }
+    
+            .language-javascript {
+                background: none;
+            }        
         </style>
     </head>
-    
     <body class="flex flex-col h-screen" style="background:black">
         <div id="chat-container" class="flex flex-col flex-grow p-4">
             <div id="messages" class="flex-grow overflow-y-auto p-2 rounded mb-4"></div>
             <div class="flex flex-col">
                 <select id="language-model" class="mb-4 p-2 border border-gray-300 rounded w-full">
-                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                    <option value="gpt-4o">GPT-4o</option>
                     <option value="gpt-4">GPT-4</option>
-                    <!-- Add more options as needed -->
-                </select>        
-                <div class="flex">            
-                    <textarea id="message-input" rows="2" placeholder="Type a message"
-                        class="text-black flex-grow p-2 border border-gray-300 rounded mr-2"></textarea>
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                </select>  
+                <div class="flex">
+                    <textarea id="message-input" rows="2" placeholder="Type a message" class="flex-grow p-2 border border-gray-300 rounded mr-2"></textarea>
                     <button id="send-button" class="p-2 bg-blue-500 text-white rounded">Send</button>
                 </div>
             </div>
         </div>
-
-            <script>
-                const vscode = acquireVsCodeApi();
-                document.getElementById('send-button').addEventListener('click', () => {
+    
+        <script>
+            const vscode = acquireVsCodeApi();
+            document.getElementById('send-button').addEventListener('click', () => {
+                sendMessage();
+            });
+    
+            document.getElementById('message-input').addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
                     sendMessage();
-                });
-
-                document.getElementById('message-input').addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' && !event.shiftKey) {
-                        event.preventDefault();
-                        sendMessage();
-                    }
-                });
-
-                function sendMessage() {
-                    const input = document.getElementById('message-input');
-                    const message = input.value.trim();
-                    const model = document.getElementById('language-model').value;
-                    if (message) {
-                        const messagesDiv = document.getElementById('messages');
-                        messagesDiv.innerHTML += '<div class="message user-message bg-green-100 self-end">' + message + '</div>';
-                        input.value = '';
-                        vscode.postMessage({ command: 'sendMessage', text: message, model: model });
-                        updateState();
-                    }
                 }
-
-                window.addEventListener('message', event => {
-                    const message = event.data;
-                    switch (message.command) {
-                        case 'receiveMessage':
-                            const messagesDiv = document.getElementById('messages');
-                            messagesDiv.innerHTML += '<div class="code-content message bot-response bg-gray-200 self-start">' + message.text + '</div>';
-                            
-                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                            updateState();                            
-                            break;
-                        case 'restoreState':
-                            const state = message.state;
-                            if (state) {
-                                document.getElementById('messages').innerHTML = state;
-                            }
-                            break;
-                    }
-                });
-
-                function updateState() {
+            });
+    
+            function sendMessage() {
+                const input = document.getElementById('message-input');
+                const message = input.value.trim();
+                const model = document.getElementById('language-model').value;
+                if (message) {
                     const messagesDiv = document.getElementById('messages');
-                    vscode.setState({ messages: messagesDiv.innerHTML });
-                    vscode.postMessage({ command: 'saveState', state: messagesDiv.innerHTML });
+                    const userMessageHTML = \`
+                        <div class="flex-container user-message-container">
+                            <div class="message user-message bg-green-100 self-end">\${message}</div>
+                            <i class="fas fa-user user-icon"></i>
+                        </div>\`;
+                    messagesDiv.innerHTML += userMessageHTML;
+                    input.value = '';
+                    vscode.postMessage({ command: 'sendMessage', text: message, model: model });
+                    updateState();
                 }
-
-                (function() {
-                    const state = vscode.getState();
-                    if (state) {
-                        document.getElementById('messages').innerHTML = state.messages;
-                    }
-                    document.getElementById('message-input').focus();
-                })();
-            </script>
-        </body>
-        </html>`;
+            }
+    
+            window.addEventListener('message', event => {
+                const message = event.data;
+                switch (message.command) {
+                    case 'receiveMessage':
+                        const messagesDiv = document.getElementById('messages');
+                        const botMessageHTML = \`                    
+                            <div class="flex-container bot-message-container">
+                                <i class="fas fa-robot bot-icon"></i>
+                                <div class="code-content message bot-response bg-gray-200 self-start">\${message.text}</div>
+                            </div>\`;
+                        messagesDiv.innerHTML += botMessageHTML;
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        updateState();
+                        break;
+                    case 'restoreState':
+                        const state = message.state;
+                        if (state) {
+                            document.getElementById('messages').innerHTML = state;
+                        }
+                        break;
+                }
+            });
+    
+            function updateState() {
+                const messagesDiv = document.getElementById('messages');
+                vscode.setState({ messages: messagesDiv.innerHTML });
+                vscode.postMessage({ command: 'saveState', state: messagesDiv.innerHTML });
+            }
+    
+            (function() {
+                const state = vscode.getState();
+                if (state) {
+                    document.getElementById('messages').innerHTML = state.messages;
+                }
+                document.getElementById('message-input').focus();
+            })();
+        </script>
+    </body>
+    </html>
+    `;
 }

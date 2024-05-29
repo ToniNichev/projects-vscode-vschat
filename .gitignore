@@ -32,7 +32,6 @@ jspm_packages/
 .env
 
 # VS Code files
-.vscode/
 .history/
 
 # Build directories
