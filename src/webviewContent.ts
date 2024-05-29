@@ -156,7 +156,7 @@ export function getWebviewContent() {
                     const messagesDiv = document.getElementById('messages');
                     const userMessageHTML = \`
                         <div class="flex-container user-message-container">
-                            <div class="message user-message bg-green-100 self-end">\${message}</div>
+                            <div class="message user-message bg-green-100 self-end"><pre>\${message}</pre></div>
                             <i class="fas fa-user user-icon"></i>
                         </div>\`;
                     messagesDiv.innerHTML += userMessageHTML;

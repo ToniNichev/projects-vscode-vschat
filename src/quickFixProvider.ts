@@ -46,7 +46,7 @@ export class QuickFixProvider implements vscode.CodeActionProvider {
 
     private async getReplacementCode(document: vscode.TextDocument, range: vscode.Range, diagnosticMessage: string): Promise<string> {
         const codeToFix = document.getText(range);
-        const prompt = `Please provide a better version of the following code:\n\n${codeToFix}\n\nThe issue is: ${diagnosticMessage}`;
+        const prompt = `Provide a better version of the following code:\n\n${codeToFix}\n\nThe issue is: ${diagnosticMessage}`;
         const apiKey = '';
         const model = 'gpt-3.5-turbo';  // Replace with the model you want to use
 
