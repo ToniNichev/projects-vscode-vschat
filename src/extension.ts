@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { OpenAI } from 'openai';
 import { getWebviewContent } from './webviewContent';
 import { QuickFixProvider } from './quickFixProvider';
-import marked from "marked";
+import { marked } from "marked";
 
 async function queryChatGPT(prompt: string, apiKey: string, model: string) {
     const openai = new OpenAI({
@@ -24,6 +24,27 @@ async function queryChatGPT(prompt: string, apiKey: string, model: string) {
         }
     }
 }
+
+// Create a custom renderer
+const renderer = new marked.Renderer();
+
+renderer.code = (code, infostring) => {
+    const language = infostring ? infostring.toLowerCase() : 'plaintext';
+    const languageLabel = infostring ? infostring.charAt(0).toUpperCase() + infostring.slice(1) : 'Plaintext';
+    
+    return `
+        <div class="code-window">
+            <div class="code-header">${languageLabel}</div>
+            <pre><code class="language-${language}">${code}</code></pre>
+        </div>
+    `;
+};
+
+marked.setOptions({
+    renderer,
+    breaks: true // Ensure breaks are enabled
+});
+
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -128,4 +149,4 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposable);
 }
 
-export function deactivate() { }
+export function deactivate() { }5

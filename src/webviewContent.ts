@@ -116,7 +116,25 @@ export function getWebviewContent() {
     
             .language-javascript {
                 background: none;
-            }        
+            }      
+            
+            .code-window {
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin: 10px 0;
+                overflow: hidden;
+            }
+            .code-header {
+                background-color: #f0f0f0;
+                padding: 5px 10px;
+                font-weight: bold;
+                border-bottom: 1px solid #ccc;
+            }
+            pre {
+                margin: 0;
+                padding: 10px;
+                background-color: #f9f9f9;
+            }            
         </style>
     </head>
     <body class="flex flex-col h-screen" style="background:black">
