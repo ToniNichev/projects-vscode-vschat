@@ -165,16 +165,27 @@ export function getWebviewContent() {
                     sendMessage();
                 }
             });
+
+            function escapeHtml(html) {
+                return html
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
     
             function sendMessage() {
                 const input = document.getElementById('message-input');
                 const message = input.value.trim();
                 const model = document.getElementById('language-model').value;
+                const sanitizedHtmlContent = escapeHtml(message);
                 if (message) {
                     const messagesDiv = document.getElementById('messages');
                     const userMessageHTML = \`
                         <div class="flex-container user-message-container">
-                            <div class="message user-message bg-green-100 self-end"><pre>\${message}</pre></div>
+                            <div class="message user-message bg-green-100 self-end"><pre>\${sanitizedHtmlContent}</pre></div>
                             <i class="fas fa-user user-icon"></i>
                         </div>\`;
                     messagesDiv.innerHTML += userMessageHTML;

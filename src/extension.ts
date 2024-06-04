@@ -107,25 +107,6 @@ export function activate(context: vscode.ExtensionContext) {
                             }
 
                             let response = marked(rawResponse);
-                            /*
-                            let response = rawResponse.replace(/\n/g, '<br>');
-                            response = response.replace(/```(.*?)<br>(.*?)```/gs, `
-                            <div class="mx-auto">
-                            <div class="bg-gray-800 rounded-lg shadow-lg">
-                                <div class="flex items-center justify-between px-4 py-2 bg-gray-900 rounded-t-lg">
-                                    <span class="text-green-500 text-sm font-mono">$1</span>
-                                    <div class="space-x-1.5">
-                                    <span class="block w-2 h-2 bg-red-500 rounded-full"></span>
-                                    <span class="block w-2 h-2 bg-yellow-500 rounded-full"></span>
-                                    <span class="block w-2 h-2 bg-green-500 rounded-full"></span>
-                                </div>                    
-                                </div>
-                                <pre class="p-4 overflow-auto text-sm bg-gray-800 rounded-b-lg text-white font-mono">
-                                <pre><code class="language-javascript">$2</code></pre>
-                            </div>
-                        </div>                            
-                            `);
-                            */
                             if (panel) {
                                 // Send response back to the webview
                                 panel.webview.postMessage({ command: 'receiveMessage', text: response });
