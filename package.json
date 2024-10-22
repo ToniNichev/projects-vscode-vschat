@@ -1,10 +1,12 @@
 {
-  "name": "vschat",
-  "displayName": "vschat",
+  "name": "openaivschat",
+  "displayName": "openaivschat",
   "description": "vschat is a Visual Studio Code extension that allows you to chat with openAI from VSCode window.",
-  "publisher": "toni",
+  "publisher": "ToniNichev",
   "version": "0.0.1",
   "icon": "images/icon.png",
+  "license": "MIT",
+  "repository": "https://github.com/ToniNichev/projects-vscode-vschat",
   "engines": {
     "vscode": "^1.89.0"
   },
