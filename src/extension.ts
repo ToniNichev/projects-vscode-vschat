@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { OpenAI } from 'openai';
 import { getWebviewContent } from './webviewContent';
-import { QuickFixProvider } from './quickFixProvider';
 import { marked } from "marked";
 
 async function queryChatGPT(prompt: string, apiKey: string, model: string) {
@@ -47,13 +46,6 @@ marked.setOptions({
 
 
 export function activate(context: vscode.ExtensionContext) {
-
-
-    const quickFixProvider = new QuickFixProvider();
-    context.subscriptions.push(vscode.languages.registerCodeActionsProvider('javascript', quickFixProvider, {
-        providedCodeActionKinds: QuickFixProvider.providedCodeActionKinds
-    }));
-
 
     let panel: vscode.WebviewPanel | undefined = undefined;
 
